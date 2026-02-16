@@ -25,7 +25,7 @@ def signup():
         regUsuario.close()
         return render_template('home.html')
     else:
-        """Renderiza el formulario de registrO"""
+        
         return render_template('registro.html')
     
 if __name__ == '__main__':

@@ -55,6 +55,6 @@ def signin():
         return render_template('signin.html')            
 
 
- if __name__ == '__main__':
+if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])
     makeupvelaApp.run(port=5025,debug=True)

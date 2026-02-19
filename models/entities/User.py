@@ -12,3 +12,5 @@ class User (UserMixin):
 def validarClave(self,claveCifrada,clave):
     return chreck_password_hash(claveCifrada,clave)
     
+    
+    

@@ -1,5 +1,5 @@
 from tempfile import template
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request,flash
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 from config import config
@@ -48,9 +48,11 @@ def signin():
                 else:
                     return render_template('usuario.html')
             else:
-                return 'Contraseña incorrecta'
+                flash ('Contraseña incorrecta')
+                return render_template('signin.html')
         else:
-            return 'Usuario inexistente'
+            flash ('Usuario inexistente')
+            return render_template('signin.html')
     else:
         return render_template('signin.html')            
 

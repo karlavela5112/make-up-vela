@@ -54,7 +54,20 @@ def signin():
             flash ('Usuario inexistente')
             return render_template('signin.html')
     else:
-        return render_template('signin.html')            
+        return render_template('signin.html')  
+        return render_template('signin.html')
+@makeupvelaApp.route('/signout')
+def signout():
+    logout_user()
+    return render_template('home.html')
+
+@makeupvelaApp.route('/sUsuario',methods = ['GET','POST'])
+def sUsuario():
+    selUsuario = db.connection.cursor()
+    selUsuario.execute("SELECT * FROM usuarios")
+    u = selUsuario.fetchall()
+    selUsuario.close()
+    return render_template('users.html', usuarios=u)
 
 
 if __name__ == '__main__':

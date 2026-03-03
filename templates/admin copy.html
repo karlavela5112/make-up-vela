@@ -1,0 +1,35 @@
+
+ {% extends 'layout.html' %}
+ {% block titulo%} administrador {% endblock %}
+ {% block contenido%}
+<div class="container">
+    <table class="table table-striped-columns">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">nombre</th>
+      <th scope="col">correo</th>
+      <th scope="col">clave</th>
+      <th scope="col">Perfil</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <th scope="row">{{u[0]}}</th>
+      <td>{{u[1]}}</td>
+      <td>{{u[2]}}</td>
+      <td>{{u[3]}}</td>
+      <td>{{u[4]}}</td>
+      <td>boton editar</td>
+      <td>boton eliminar</td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+</div>
+{% endblock %}
+</html>
+

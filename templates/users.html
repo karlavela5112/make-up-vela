@@ -1,0 +1,72 @@
+
+{% extends 'layout.html' %}
+{% block titulo%} administrador {% endblock %}
+{% block contenido%}
+<div class="container">
+    <table class="table table-striped-columns">
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">nombre</th>
+      <th scope="col">correo</th>
+      <th scope="col">clave</th>
+      <th scope="col">Perfil</th>
+      <th scope="col" colspan="2">  <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">
+<i class="fa-solid fa-user-plus"></i>
+</button>
+      </th>
+    </tr>
+  </thead>
+
+
+<!-- Modal -->
+<div class="modal fade" id="inserteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Cuenta</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('iUsuarios') }}" method="post">
+      <div class="modal-body">
+        <imput type="text" name="nombre" placeholder="Nombre" class="Nombre de usuario" required>
+        <imput type="email" name="correo" placeholder="Correo" class="Correo electronico" required>
+        <imput type="password" name="clave" placeholder="Clave" class="Contraseña" required>
+          <select name="perfil" class="form-select" aria-label="Default select example" required>
+            <select class="form-select" aria-label="Default select example">
+            <option selected>Open this select menu</option>
+            <option value="U">One</option>
+            <option value="A">Two</option>
+</select>
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+  <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <th scope="row">{{u[0]}}</th>
+      <td>{{u[1]}}</td>
+      <td>{{u[2]}}</td>
+      <td>{{u[3][:30]}}</td>
+      <td>{{u[4]}}</td>
+      <td>boton editar</td>
+      <td>boton eliminar</td>
+    </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
+</div>
+{% endblock %}
+</html>
+

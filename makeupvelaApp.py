@@ -1,5 +1,5 @@
 from tempfile import template
-from flask import Flask, render_template, url_for, request,flash
+from flask import Flask, render_template,redirect, url_for, request,flash
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 from config import config
@@ -28,9 +28,10 @@ def signup():
         claveCifrada = generate_password_hash(clave)
         regUsuario = db.conection.cursor()
         regUsuario = db.execute("INSERT INTO usuarios (nombre, correo, clave) VALUES (%s, %s, %s)", (nombre.upper(), correo, claveCifrada))
+        flash('Usuario registrado') 
         db.conection.commit()
         regUsuario.close()
-        return render_template('home.html')
+        return redirect(url_for('signin'))
     else:
         
         return render_template('registro.html')
@@ -69,7 +70,15 @@ def sUsuario():
     selUsuario.close()
     return render_template('users.html', usuarios=u)
 
+@makeupvelaApp.route('/signin', methods=["GET", "POST"])
+def signout():
+    logout_user()
+    return render_template('home.html')
+@makeupvelaApp.route('/iUsuario', methods=["GET", "POST"])
+def iUsuario():
+        return render_template('users.html')
 
 if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])
     makeupvelaApp.run(port=5025,debug=True)
+

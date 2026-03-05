@@ -76,7 +76,20 @@ def signout():
     return render_template('home.html')
 @makeupvelaApp.route('/iUsuario', methods=["GET", "POST"])
 def iUsuario():
-        return render_template('users.html')
+        if request.method == 'POST':
+            nombre = request.form['nombre']
+            correo = request.form['correo'] 
+            clave = request.form['clave']
+            claveCifrada = generate_password_hash(clave)
+            perfil = request.form['perfil']
+            regUsuario = db.connection.cursor()
+            regUsuario.execute("INSERT INTO usuarios (nombre, correo, clave, perfil) VALUES (%s, %s, %s, %s)", (nombre.upper(), correo, claveCifrada, perfil))
+            flash('Usuario registrado') 
+            db.connection.commit()
+            regUsuario.close()
+            return redirect(url_for('sUsuario'))
+        else:
+            return render_template('users.html')
 
 if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])

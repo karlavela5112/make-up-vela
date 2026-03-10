@@ -56,7 +56,6 @@ def signin():
             return render_template('signin.html')
     else:
         return render_template('signin.html')  
-        return render_template('signin.html')
 @makeupvelaApp.route('/signout')
 def signout():
     logout_user()
@@ -90,8 +89,23 @@ def iUsuario():
             return redirect(url_for('sUsuario'))
         else:
             return render_template('users.html')
-
+@makeupvelaApp.route('/uUsuario/<int:id>', methods=['GET', 'POST'])
+def uUsuario(id):
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        correo = request.form['correo'] 
+        clave = request.form['clave']
+        perfil = request.form['perfil']
+        actUsuario = db.connection.cursor()
+        actUsuario.execute("UPDATE usuarios SET nombre=%s, correo=%s, clave=%s, perfil=%s WHERE id=%s", (nombre.upper(), correo, clave, perfil, id))
+        db.connection.commit()
+        actUsuario.close()
+        return redirect(url_for('sUsuario'))
+    else:
+       return redirect(url_for('sUsuario'))
+    
 if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])
     makeupvelaApp.run(port=5025,debug=True)
+
 

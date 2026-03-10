@@ -22,7 +22,8 @@
       <th scope="col">correo</th>
       <th scope="col">clave</th>
       <th scope="col">Perfil</th>
-      <th scope="col" colspan="2">  <!-- Button trigger modal -->
+      <th scope="col" colspan="2"> 
+         <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">
 <i class="fa-solid fa-user-plus"></i>
 </button>
@@ -69,9 +70,49 @@
       <td>{{u[2]}}</td>
       <td>{{u[3][:30]}}</td>
       <td>{{u[4]}}</td>
-      <td>boton editar</td>
+      <td>
+        <!-- Button update -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">
+<i class="fa-solid fa-user-pen" style="color: rgb(8, 93, 245);"></i>
+</button>
+      </td>
       <td>boton eliminar</td>
     </tr>
+    <!-- update Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Actualizar Cuenta</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('uUsuarios') }}-{{ u[0] }}" method="post">
+      <div class="modal-body">
+        <imput value="{{ u[1] }}" type="text" name="nombre" placeholder="Nombre" class="Nombre de usuario" required>
+        <imput value="{{ u[2] }}" type="email" name="correo" placeholder="Correo" class="Correo electronico" required>
+        <imput type="password" name="clave" placeholder="Clave" class="Contraseña" required>
+          <select name="perfil" class="form-select" aria-label="Default select example" required>
+            <select name="perfil" class="form-select" aria-label="Default select example">
+            <option selected value="{{u[4]}}">
+            {% if u[4] == 'A' %}
+            Administrador
+            {% else %}usuario{% endif %}
+            </option>
+            <option selected>perfil</option>
+            <option value="U">usuario</option>
+            <option value="A">administrador</option>
+</select>
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">crear cuenta </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
     {% endfor %}
     
   </tbody>

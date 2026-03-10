@@ -1,6 +1,8 @@
 from werkzeug.security import chreck_password_hash
 from flask_login import UserMixin
+
 class User (UserMixin):
+    @classmethod
     def __init__(self,id,nombre,correo,clave,perfil):
         self.id=id
         self.nombre=nombre  

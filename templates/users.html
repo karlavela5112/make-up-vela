@@ -72,14 +72,19 @@
       <td>{{u[4]}}</td>
       <td>
         <!-- Button update -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{u[0]}}">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{u[0]}}">
 <i class="fa-solid fa-user-pen" style="color: rgb(8, 93, 245);"></i>
 </button>
       </td>
-      <td>boton eliminar</td>
+      <td>
+        <!-- Button Delete -->
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  <i class="fa-solid fa-trash" style="color: rgb(177, 151, 252);"></i>
+</button>
+      </td>
     </tr>
     <!-- update Modal -->
-<div class="modal fade" id="updateModal{{u[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal{{u[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -108,6 +113,30 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary">crear cuenta </button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuario</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/dUsuario/{{ u[0] }}" method="post">
+      <div class="modal-body">
+        <p><i class="fa-solid fa-triangle-exclamation" style="color: rgb(255, 0, 0);"></i>
+        ¿Estás seguro de que deseas eliminar este usuario{{ u[1] }}?
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-danger">Eliminar Usuario</button>
       </div>
       </form>
     </div>

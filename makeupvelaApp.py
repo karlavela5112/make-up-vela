@@ -103,9 +103,20 @@ def uUsuario(id):
         return redirect(url_for('sUsuario'))
     else:
        return redirect(url_for('sUsuario'))
-    
+@makeupvelaApp.route('/dUsuario/<int:id>', methods=['GET', 'POST'])
+def dUsuario(id):
+    if request.method == 'POST':
+        delUsuario = db.connection.cursor()
+        delUsuario.execute("DELETE FROM usuarios WHERE id=%s", (id,))
+        db.connection.commit()
+        delUsuario.close()
+        flash('Usuario eliminado')
+        return redirect(url_for('sUsuario'))
+    else:
+        return render_template('users.html')
+     
 if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])
-    makeupvelaApp.run(port=5025,debug=True)
+makeupvelaApp.run(port=5025,debug=True)
 
 

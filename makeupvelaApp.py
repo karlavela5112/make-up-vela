@@ -47,7 +47,11 @@ def signin():
                 if usuarioAutenticado.perfil == 'A':
                     return render_template('admin.html')
                 else:
-                    return render_template('usuario.html')
+                    selProducto = db.connection.cursor()
+                    selProducto.execute("SELECT * FROM productos")
+                    p = selProducto.fetchall()
+                    selProducto.close()
+                    return render_template('usuario.html', productos=p)
             else:
                 flash ('Contraseña incorrecta')
                 return render_template('signin.html')

@@ -118,6 +118,15 @@ def dUsuario(id):
         return redirect(url_for('sUsuario'))
     else:
         return render_template('users.html')
+
+@makeupvelaApp.route('/sProducto',methods = ['GET','POST']) 
+def sProducto():
+    selProducto = db.connection.cursor()
+    selProducto.execute("SELECT * FROM productos")
+    p = selProducto.fetchall()
+    selProducto.close()
+    return render_template('productos.html', productos=p)
+
      
 if __name__ == '__main__':
     makeupvelaApp.config.from_object(config['development'])

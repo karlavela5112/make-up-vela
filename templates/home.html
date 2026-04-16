@@ -494,10 +494,10 @@
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
                 <div class="auth-buttons">
-                    <a href="/login" class="btn-nav">
+                    <a href="registro.html" class="btn-nav">
                         <i class="fa-solid fa-sign-in-alt"></i> Inicia Sesión
                     </a>
-                    <a href="/signup" class="btn-nav">
+                    <a href="signup.html" class="btn-nav">
                         <i class="fa-solid fa-user-plus"></i> Regístrate
                     </a>
                 </div>
@@ -560,63 +560,63 @@
                 name: "Base de Maquillaje",
                 description: "Base líquida de larga duración",
                 price: 25.99,
-                icon: "fa-solid fa-droplet"
+                image: "/static/img/makeup1.jpg"
             },
             {
                 id: 2,
                 name: "Corrector",
                 description: "Corrector iluminador para ojeras",
                 price: 15.99,
-                icon: "fa-solid fa-wand-magic-sparkles"
+                image: "/static/img/makeup2.jpg"
             },
             {
                 id: 3,
                 name: "Polvo Compacto",
                 description: "Polvo matificante de media cobertura",
                 price: 18.99,
-                icon: "fa-solid fa-powder"
+                image: "/static/img/makeup3.jpg"
             },
             {
                 id: 4,
                 name: "Rubor",
                 description: "Rubor en polvo con acabado brillante",
                 price: 16.99,
-                icon: "fa-solid fa-face-smile"
+                image: "/static/img/makeup4.jpg"
             },
             {
                 id: 5,
                 name: "Labial Mate",
                 description: "Labial de larga duración mate",
                 price: 12.99,
-                icon: "fa-solid fa-lips"
+                image: "/static/img/makeup5.jpg"
             },
             {
                 id: 6,
                 name: "Labial Brillo",
                 description: "Labial con efecto brillo y volumen",
                 price: 13.99,
-                icon: "fa-solid fa-lips"
+                image: "/static/img/hero-lip.jpg"
             },
             {
                 id: 7,
                 name: "Delineador",
                 description: "Delineador líquido resistente al agua",
                 price: 10.99,
-                icon: "fa-solid fa-pen-fancy"
+                image: "/static/img/delineador.jpg"
             },
             {
                 id: 8,
                 name: "Máscara de Pestañas",
                 description: "Máscara voluminizadora de larga duración",
                 price: 14.99,
-                icon: "fa-solid fa-eye"
+                image: "/static/img/makeup8.jpg"
             },
             {
                 id: 9,
                 name: "Paleta de Sombras",
                 description: "Paleta de 12 colores profesional",
                 price: 32.99,
-                icon: "fa-solid fa-palette"
+                image: "/static/img/makeup9.jpg"
             }
         ];
 
@@ -628,7 +628,7 @@
             grid.innerHTML = products.map(product => `
                 <div class="product-card">
                     <div class="product-image">
-                        <i class="${product.icon}"></i>
+                        <img src="${product.image}" alt="${product.name}" style="width:100%;height:100%;object-fit:cover;" />
                     </div>
                     <div class="product-info">
                         <div class="product-name">${product.name}</div>

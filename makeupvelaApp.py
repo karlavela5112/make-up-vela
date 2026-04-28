@@ -6,11 +6,17 @@ from config import config
 from models.entities.User import User
 from models.ModelUser import ModelUser
 from flask_login import LoginManager, login_user, logout_user
+from flask_mail import Mail, Message
 
 makeupvelaApp=Flask (__name__)
 
+makeupvelaApp.config.from_object(config['development'])
+makeupvelaApp.config.from_object(config['mail'])
+
+
 db              =MySQL(makeupvelaApp)
 adminUsuario = LoginManager(makeupvelaApp)
+mail = Mail(makeupvelaApp)
 
 @adminUsuario.user_loader
 def cargarUsuario(id):
@@ -26,6 +32,9 @@ def signup():
         correo = request.form['correo'] 
         clave = request.form['clave']
         claveCifrada = generate_password_hash(clave)
+        msg = Message(subject='Bienvenido a Makeup Vela', recipients=[correo])
+        msg.html = render_template('mail.html', usuario=nombre)
+        mail.send(msg)
         regUsuario = db.conection.cursor()
         regUsuario = db.execute("INSERT INTO usuarios (nombre, correo, clave) VALUES (%s, %s, %s)", (nombre.upper(), correo, claveCifrada))
         flash('Usuario registrado') 
@@ -129,7 +138,6 @@ def sProducto():
 
      
 if __name__ == '__main__':
-    makeupvelaApp.config.from_object(config['development'])
-makeupvelaApp.run(port=5025,debug=True)
+    makeupvelaApp.run(port=5025,debug=True)
 
 

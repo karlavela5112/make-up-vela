@@ -1,5 +1,5 @@
- {% extends 'layout.html' %} SON LOS ARCHIVOS DE LOS QUE SE HEREDA, EN ESTE CASO EL LAYOUT, PARA PODER USAR SUS BLOQUES
- {% block titulo %} Registro {% endblock %}
+ {% extends 'layout.html' %}
+ {% block titulo %} Inicios  {% endblock %}
  {% block contenido %}
 <head>
     <meta charset="UTF-8">
@@ -230,14 +230,14 @@
             <p>Bienvenido de vuelta</p>
         </div>
 
-        <form class="login-form" method="POST" action="/login">
+        <form class="login-form" method="POST" action="signin.html">
             <div class="form-group">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
                          {% for m in messages %}
-                             <div class="alert alert-danger" role="alert">
-                            {{ m }}
-                            </div>
+                                  <div class="alert alert-danger" role="alert">
+                                         {{ m }}
+                                  </div>
                          {% endfor %}
                     {% endif %}
                 {% endwith %}
@@ -262,7 +262,7 @@
         </form>
 
         <div class="login-footer">
-            <p>¿No tienes cuenta? <a href="/registro">Regístrate aquí</a></p>
+            <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
         </div>
     </div>
 

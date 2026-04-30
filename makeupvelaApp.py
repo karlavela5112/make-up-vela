@@ -1,12 +1,15 @@
 from tempfile import template
+from tkinter import INSERT
 from flask import Flask, render_template,redirect, url_for, request,flash
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 from config import config
 from models.entities.User import User
 from models.ModelUser import ModelUser
 from flask_login import LoginManager, login_user, logout_user
 from flask_mail import Mail, Message
+import os
 
 makeupvelaApp=Flask (__name__)
 
@@ -136,7 +139,54 @@ def sProducto():
     selProducto.close()
     return render_template('productos.html', productos=p)
 
-     
+@makeupvelaApp.route('/uProductos/<int:id>' ,methods=['GET','POST'])
+def uProductos(id):
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+        categoria = request.form['categoria']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        nombre_img = request.form['nombre_img_actual']
+        imagen = request.files['imagen']
+        if imagen and imagen.filename:
+            nombre_img = secure_filename(imagen.filename)
+            imagen.save(os.path.join('static/img', nombre_img))
+
+        actProducto = db.connection.cursor()
+        actProducto.execute(
+            "UPDATE productos SET nombre=%s, descripcion=%s, categoria=%s, precio=%s, stock=%s, nombre_img=%s WHERE id=%s",
+            (nombre, descripcion, categoria, precio, stock, nombre_img, id)
+        )
+        db.connection.commit()
+        actProducto.close()
+        flash("Producto actualizado exitosamente")
+        return redirect(url_for('productos'))
+    else:
+        flash("Error al actualizar el producto")
+        return redirect(url_for('productos'))
+@makeupvelaApp.route('/iProducto', methods=['GET', 'POST'])
+def iProducto():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+        categoria = request.form['categoria']
+        precio = request.form['precio']
+        stock = request.form['stock']
+        imagen = request.files['imagen']
+    nombre_img = None
+    if imagen and imagen.filename:
+        nombre_img = secure_filename(imagen.filename)
+        imagen.save(os.path.join('static/img', nombre_img))
+    NuevoProducto = db.connection.cursor()
+    NuevoProducto.execute("INSERT INTO productos (nombre, descripcion, categoria, precio, stock, nombre_img) VALUES (%s, %s, %s, %s, %s, %s)", (nombre.upper(), descripcion, categoria, precio, stock, nombre_img))
+    db.connection.commit()
+    flash('Producto Agregado')
+    NuevoProducto.close()
+     return redirect(url_for('sProducto'))
+    else:
+    return render_template('productos.html')
+
 if __name__ == '__main__':
     makeupvelaApp.run(port=5025,debug=True)
 

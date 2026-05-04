@@ -1,6 +1,6 @@
 from tempfile import template
 from tkinter import INSERT
-from flask import Flask, render_template,redirect, url_for, request,flash
+from flask import Flask, render_template,redirect, url_for, request,flash, session
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -11,7 +11,9 @@ from flask_login import LoginManager, login_user, logout_user
 from flask_mail import Mail, Message
 import os
 
+
 makeupvelaApp=Flask (__name__)
+makeupvelaApp.secret_key = 'clave_secreta_cambia_esto'
 
 makeupvelaApp.config.from_object(config['development'])
 makeupvelaApp.config.from_object(config['mail'])
@@ -24,10 +26,81 @@ mail = Mail(makeupvelaApp)
 @adminUsuario.user_loader
 def cargarUsuario(id):
     return ModelUser.get_by_id(db, id)
-@makeupvelaApp.route('/')
+
+@makeupvelaApp.route('/', methods=['GET'])
 def home():
-    ""
-    return render_template('home.html')
+    # Obtener productos de la base de datos
+    selProducto = db.connection.cursor()
+    selProducto.execute("SELECT * FROM productos")
+    productos = selProducto.fetchall()
+    selProducto.close()
+    # Carrito desde sesión
+    carrito = session.get('carrito', [])
+    total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito) if carrito else 0
+    return render_template('home.html', productos=productos, carrito=carrito, total_carrito=total_carrito)
+
+# Ruta para agregar producto al carrito
+@makeupvelaApp.route('/agregar_al_carrito', methods=['POST'])
+def agregar_al_carrito():
+    producto_id = int(request.form['producto_id'])
+    cantidad = int(request.form.get('cantidad', 1))
+    # Buscar producto en la base de datos
+    selProducto = db.connection.cursor()
+    selProducto.execute("SELECT * FROM productos WHERE id = %s", (producto_id,))
+    producto = selProducto.fetchone()
+    selProducto.close()
+    if not producto:
+        flash('Producto no encontrado')
+        return redirect(url_for('home'))
+    # Preparar item carrito
+    item = {
+        'id': producto['id'],
+        'nombre': producto['nombre'],
+        'precio': producto['precio'],
+        'cantidad': cantidad
+    }
+    carrito = session.get('carrito', [])
+    # Si ya está en el carrito, sumar cantidad
+    for prod in carrito:
+        if prod['id'] == item['id']:
+            prod['cantidad'] += cantidad
+            break
+    else:
+        carrito.append(item)
+    session['carrito'] = carrito
+    flash('Producto agregado al carrito')
+    return redirect(url_for('home'))
+
+# Ruta para actualizar cantidad en el carrito
+@makeupvelaApp.route('/actualizar_carrito', methods=['POST'])
+def actualizar_carrito():
+    producto_id = int(request.form['producto_id'])
+    cantidad = int(request.form.get('cantidad', 1))
+    carrito = session.get('carrito', [])
+    for prod in carrito:
+        if prod['id'] == producto_id:
+            prod['cantidad'] = cantidad
+            break
+    session['carrito'] = [p for p in carrito if p['cantidad'] > 0]
+    flash('Carrito actualizado')
+    return redirect(url_for('home'))
+
+# Ruta para eliminar producto del carrito
+@makeupvelaApp.route('/eliminar_del_carrito', methods=['POST'])
+def eliminar_del_carrito():
+    producto_id = int(request.form['producto_id'])
+    carrito = session.get('carrito', [])
+    carrito = [p for p in carrito if p['id'] != producto_id]
+    session['carrito'] = carrito
+    flash('Producto eliminado del carrito')
+    return redirect(url_for('home'))
+
+# Ruta para checkout
+@makeupvelaApp.route('/checkout', methods=['POST'])
+def checkout():
+    session.pop('carrito', None)
+    flash('¡Gracias por tu compra!')
+    return redirect(url_for('home'))
 @makeupvelaApp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.form == 'POST':
@@ -183,11 +256,12 @@ def iProducto():
     db.connection.commit()
     flash('Producto Agregado')
     NuevoProducto.close()
-     return redirect(url_for('sProducto'))
+    
+        return redirect(url_for('sProducto'))
     else:
-    return render_template('productos.html')
+        return render_template('productos.html')
 
-if __name__ == '__main__':
-    makeupvelaApp.run(port=5025,debug=True)
+    if __name__ == '__main__':
+     makeupvelaApp.run(port=5025,debug=True)
 
 

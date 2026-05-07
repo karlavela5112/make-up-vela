@@ -158,10 +158,6 @@ def sUsuario():
     selUsuario.close()
     return render_template('users.html', usuarios=u)
 
-@makeupvelaApp.route('/signin', methods=["GET", "POST"])
-def signout():
-    logout_user()
-    return render_template('home.html')
 @makeupvelaApp.route('/iUsuario', methods=["GET", "POST"])
 def iUsuario():
         if request.method == 'POST':
@@ -247,21 +243,21 @@ def iProducto():
         precio = request.form['precio']
         stock = request.form['stock']
         imagen = request.files['imagen']
-    nombre_img = None
-    if imagen and imagen.filename:
-        nombre_img = secure_filename(imagen.filename)
-        imagen.save(os.path.join('static/img', nombre_img))
-    NuevoProducto = db.connection.cursor()
-    NuevoProducto.execute("INSERT INTO productos (nombre, descripcion, categoria, precio, stock, nombre_img) VALUES (%s, %s, %s, %s, %s, %s)", (nombre.upper(), descripcion, categoria, precio, stock, nombre_img))
-    db.connection.commit()
-    flash('Producto Agregado')
-    NuevoProducto.close()
-    
+        nombre_img = None
+        if imagen and imagen.filename:
+            nombre_img = secure_filename(imagen.filename)
+            imagen.save(os.path.join('static/img', nombre_img))
+        NuevoProducto = db.connection.cursor()
+        NuevoProducto.execute("INSERT INTO productos (nombre, descripcion, categoria, precio, stock, nombre_img) VALUES (%s, %s, %s, %s, %s, %s)", (nombre.upper(), descripcion, categoria, precio, stock, nombre_img))
+        db.connection.commit()
+        flash('Producto Agregado')
+        NuevoProducto.close()
+        
         return redirect(url_for('sProducto'))
     else:
         return render_template('productos.html')
 
-    if __name__ == '__main__':
-     makeupvelaApp.run(port=5025,debug=True)
+if __name__ == '__main__':
+    makeupvelaApp.run(port=5025)
 
 

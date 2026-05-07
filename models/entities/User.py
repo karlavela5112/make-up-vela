@@ -1,4 +1,4 @@
-from werkzeug.security import chreck_password_hash
+from werkzeug.security import check_password_hash
 from flask_login import UserMixin
 
 class User (UserMixin):
@@ -12,7 +12,7 @@ class User (UserMixin):
 
 @classmethod
 def validarClave(self,claveCifrada,clave):
-    return chreck_password_hash(claveCifrada,clave)
+    return check_password_hash(claveCifrada,clave)
     
     
     

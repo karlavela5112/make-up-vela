@@ -234,6 +234,27 @@ def uProductos(id):
     else:
         flash("Error al actualizar el producto")
         return redirect(url_for('productos'))
+@makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
+def iCarrito():
+        if request.method == 'POST':
+            SelProducto = db.connection.cursor()
+            SelProducto.execute("SELECT * FROM productos WHERE id = %s", (id,))
+            p= SelProducto.fetchone()
+            producto = {
+                'id': p[0],
+                'nombre': p[1],
+                'descripcion': p[2],
+                'precio': float(p[3]),
+                'nombre_img': p[4],
+            }
+            if 'carrito' not in session:
+                session['carrito']= []
+                carrito = session['carrito']
+                carrito.append(producto)
+                session['carrito']= carrito
+                flash('producto agregado')
+                return redirect(url_for('home'))
+            
 @makeupvelaApp.route('/iProducto', methods=['GET', 'POST'])
 def iProducto():
     if request.method == 'POST':

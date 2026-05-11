@@ -1,0 +1,83 @@
+/* Estilo moderno para el formulario de registro */
+body {
+    background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container-registro {
+    background: #fff;
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 2.5rem 2rem 2rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+    border: 1px solid #fda085;
+}
+
+.container-registro h2 {
+    text-align: center;
+    color: #f76d6d;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #fda085;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+.form-group input:focus {
+    border: 1.5px solid #f76d6d;
+}
+
+.btn-registro {
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(90deg, #fda085 0%, #f6d365 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-registro:hover {
+    background: linear-gradient(90deg, #f6d365 0%, #fda085 100%);
+    transform: translateY(-2px) scale(1.03);
+}
+
+.link-login {
+    display: block;
+    text-align: center;
+    margin-top: 1.2rem;
+    color: #f76d6d;
+    text-decoration: none;
+    font-size: 0.98rem;
+    transition: color 0.2s;
+}
+
+.link-login:hover {
+    color: #fda085;
+    text-decoration: underline;
+}

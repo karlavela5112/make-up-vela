@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from config import config
 from models.entities.User import User
 from models.ModelUser import ModelUser
-from flask_login import LoginManager, login_user, logout_user
+from flask_login import LoginManager, login_required, login_user, logout_user
 from flask_mail import Mail, Message
 import os
 
@@ -103,7 +103,7 @@ def checkout():
     return redirect(url_for('home'))
 @makeupvelaApp.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.form == 'POST':
+    if request.method == 'POST':
         nombre = request.form['nombre']
         correo = request.form['correo'] 
         clave = request.form['clave']
@@ -111,14 +111,13 @@ def signup():
         msg = Message(subject='Bienvenido a Makeup Vela', recipients=[correo])
         msg.html = render_template('mail.html', usuario=nombre)
         mail.send(msg)
-        regUsuario = db.conection.cursor()
-        regUsuario = db.execute("INSERT INTO usuarios (nombre, correo, clave) VALUES (%s, %s, %s)", (nombre.upper(), correo, claveCifrada))
+        regUsuario = db.connection.cursor()
+        regUsuario.execute("INSERT INTO usuario (nombre, correo, clave) VALUES (%s, %s, %s)", (nombre.upper(), correo, claveCifrada))
         flash('Usuario registrado') 
-        db.conection.commit()
+        db.connection.commit()
         regUsuario.close()
-        return redirect(url_for('signin'))
-    else:
-        
+        return redirect(url_for('home'))
+    else: 
         return render_template('registro.html')
 
 @makeupvelaApp.route('/signin', methods=['GET', 'POST'])
@@ -234,6 +233,17 @@ def uProductos(id):
     else:
         flash("Error al actualizar el producto")
         return redirect(url_for('productos'))
+@makeupvelaApp.route('/sCarrito/<int:id>', methods=['GET', 'POST'])
+@login_required
+def sCarrito():
+    cur = db.connection.cursor()
+    cur.execute("SELECT * FROM productos")
+    p = cur.fetchall()
+    cur.close()
+    carrito = session.get('carrito', [])
+    total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito)
+    return render_template('user.html',productos=p , carrito=carrito, total=total)
+
 @makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
 def iCarrito():
         if request.method == 'POST':

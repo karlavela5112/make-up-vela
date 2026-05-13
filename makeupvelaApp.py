@@ -131,6 +131,11 @@ def signin():
                 if usuarioAutenticado.perfil == 'A':
                     return render_template('admin.html')
                 else:
+                    selCarrito = db.connection.cursor()
+                    selCarrito.execute("SELECT * FROM carrito WHERE id_usuario = %s", (usuarioAutenticado.id,))
+                    carrito = selCarrito.fetchall()
+                    selCarrito.close()
+                    session['carrito'] = sum(c[3])
                     selProducto = db.connection.cursor()
                     selProducto.execute("SELECT * FROM productos")
                     p = selProducto.fetchall()
@@ -234,15 +239,12 @@ def uProductos(id):
         flash("Error al actualizar el producto")
         return redirect(url_for('productos'))
 @makeupvelaApp.route('/sCarrito/<int:id>', methods=['GET', 'POST'])
-@login_required
-def sCarrito():
-    cur = db.connection.cursor()
-    cur.execute("SELECT * FROM productos")
-    p = cur.fetchall()
-    cur.close()
-    carrito = session.get('carrito', [])
-    total_carrito = sum(item['precio'] * item['cantidad'] for item in carrito)
-    return render_template('user.html',productos=p , carrito=carrito, total=total)
+def sCarrito(id):
+    selCarrito = db.connection.cursor()
+    selCarrito.execute("SELECT * FROM carrito WHERE detalles_carrito = %s", (id,))
+    c = selCarrito.fetchall()
+    selCarrito.close()
+    return render_template('carrito.html', carrito=c)
 
 @makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
 def iCarrito():

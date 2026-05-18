@@ -132,10 +132,23 @@ def signin():
                     return render_template('admin.html')
                 else:
                     selCarrito = db.connection.cursor()
-                    selCarrito.execute("SELECT * FROM carrito WHERE id_usuario = %s", (usuarioAutenticado.id,))
+                    selCarrito.execute(" SELECT * FROM carrito INNER JOIN productos ON productos.productos_id=productos.id")
                     carrito = selCarrito.fetchall()
                     selCarrito.close()
-                    session['carrito'] = sum(c[3])
+
+                    carrito = []
+                    for p in productos_carrito:
+                        producto={
+                            'id': p[0],
+                            'nombre': p[1],
+                            'precio': float(p[3]),
+                            'cantidad': p[4],
+                            'nombre_img': p[6],
+                        }
+                    session['carrito'] = carrito
+                    session['num_articulos']= sum()
+                    
+
                     selProducto = db.connection.cursor()
                     selProducto.execute("SELECT * FROM productos")
                     p = selProducto.fetchall()

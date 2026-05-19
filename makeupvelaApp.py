@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from config import config
 from models.entities.User import User
 from models.ModelUser import ModelUser
-from flask_login import LoginManager, login_required, login_user, logout_user
+from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from flask_mail import Mail, Message
 import os
 
@@ -132,28 +132,11 @@ def signin():
                     return render_template('admin.html')
                 else:
                     selCarrito = db.connection.cursor()
-                    selCarrito.execute(" SELECT * FROM carrito INNER JOIN productos ON productos.productos_id=productos.id")
+                    selCarrito.execute(" SELECT cantidad  FROM carrito WHERE usuario_id = %s", (usuarioAutenticado.id,))
                     carrito = selCarrito.fetchall()
                     selCarrito.close()
-
-                    carrito = []
-                    for p in productos_carrito:
-                        producto={
-                            'id': p[0],
-                            'nombre': p[1],
-                            'precio': float(p[3]),
-                            'cantidad': p[4],
-                            'nombre_img': p[6],
-                        }
-                    session['carrito'] = carrito
-                    session['num_articulos']= sum()
-                    
-
-                    selProducto = db.connection.cursor()
-                    selProducto.execute("SELECT * FROM productos")
-                    p = selProducto.fetchall()
-                    selProducto.close()
-                    return render_template('usuario.html', productos=p)
+                    session['num_articulos']= sum(c[0] for c in carrito)
+                    return redirect(url_for('home_user')) 
             else:
                 flash ('Contraseña incorrecta')
                 return render_template('signin.html')
@@ -251,13 +234,25 @@ def uProductos(id):
     else:
         flash("Error al actualizar el producto")
         return redirect(url_for('productos'))
-@makeupvelaApp.route('/sCarrito/<int:id>', methods=['GET', 'POST'])
-def sCarrito(id):
+    
+@makeupvelaApp.route('/home_user', methods=['GET','POST'])
+def home_user():
+      selProducto = db.connection.cursor()
+      selProducto.execute("SELECT * FROM productos")
+      p = selProducto.fetchall()
+      selProducto.close()
+      return render_template('usuario.html', productos=p)
+
+@makeupvelaApp.route('/sCarrito', methods=['GET', 'POST'])
+@login_required
+def sCarrito():
     selCarrito = db.connection.cursor()
-    selCarrito.execute("SELECT * FROM carrito WHERE detalles_carrito = %s", (id,))
-    c = selCarrito.fetchall()
+    selCarrito.execute("SELECT * FROM detalle_carrito INNER JOIN productos ON detalle_carrito.producto_id = productos.id WHERE detalle_carrito.usuario_id = %s", (current_user.id,))
+    detalles_carrito = selCarrito.fetchall()
     selCarrito.close()
-    return render_template('carrito.html', carrito=c)
+    session['num_articulos'] = sum(c[3] for c in detalles_carrito)
+    session['total_carrito'] = sum(c[4]for c in detalles_carrito)
+    return render_template('carrito.html', carrito=detalles_carrito)
 
 @makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
 def iCarrito():

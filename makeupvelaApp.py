@@ -243,6 +243,10 @@ def home_user():
       selProducto.close()
       return render_template('usuario.html', productos=p)
 
+@makeupvelaApp.route('/home_admin', methods=['GET','POST'])
+def home_admin():
+    return render_template('admin.html')
+
 @makeupvelaApp.route('/sCarrito', methods=['GET', 'POST'])
 @login_required
 def sCarrito():
@@ -256,24 +260,28 @@ def sCarrito():
 
 @makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
 def iCarrito():
-        if request.method == 'POST':
-            SelProducto = db.connection.cursor()
-            SelProducto.execute("SELECT * FROM productos WHERE id = %s", (id,))
-            p= SelProducto.fetchone()
-            producto = {
-                'id': p[0],
-                'nombre': p[1],
-                'descripcion': p[2],
-                'precio': float(p[3]),
-                'nombre_img': p[4],
-            }
-            if 'carrito' not in session:
-                session['carrito']= []
-                carrito = session['carrito']
-                carrito.append(producto)
-                session['carrito']= carrito
-                flash('producto agregado')
-                return redirect(url_for('home'))
+        cantidad = request.form['cantidad']
+        precio = request.form['precio']
+
+        SelProducto = db.connection.cursor()
+        SelProducto.execute("SELECT * FROM detalle_carrito WHERE usuario_id = %s AND producto_id = %s", (current_user.id, id))
+        p= SelProducto.fetchone()
+        SelProducto.close()
+        if p:
+            nueva_cantidad = p[3] + int(cantidad)
+            actCarrito= db.connection.cursor()
+            actCarrito.execute("UPDATE detalle_carrito SET cantidad=%s, importe=%s WHERE usuario_id= %s AND producto_id= %s", (nueva_cantidad, nueva_cantidad,* float(precio), current_user.id, id))
+            db.connection.commit()
+            actCarrito.close()
+            flash('Producto actualizado en el carrito')
+        else:
+            NuevoCarrito = db.connection.cursor()
+            NuevoCarrito.execute("INSERT INTO detalle_carrito (usuario_id, producto_id, cantidad, importe) VALUES (%s, %s, %s, %s)", (current_user.id, id, cantidad, float(precio) * int(cantidad)))
+            db.connection.commit()
+            NuevoCarrito.close()
+
+            flash('producto agregado al carrito')
+            return redirect(url_for('sCarrito'))
             
 @makeupvelaApp.route('/iProducto', methods=['GET', 'POST'])
 def iProducto():

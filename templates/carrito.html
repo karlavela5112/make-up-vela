@@ -485,7 +485,7 @@
 
     <nav class="navbar-custom">
         <div class="navbar-content">
-            <a href="/" class="navbar-logo">
+            <a href="{{ url_for('home_user') }}" class="navbar-logo">
                 <i class="fa-solid fa-sparkles"></i>
                 MakeUp Vela
             </a>
@@ -539,23 +539,21 @@
     {% endfor %}
     {% else %}
     <tr>
-        <td colspan="5">Tu carrito está vacío</td>
+      <td colspan="5">No hay productos en el carrito</td>
     </tr>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
+    {% endif %}
   </tbody>
-</table>
-      One of three columns
-    </div>
-    <div class="col">
-      One of three columns
-    </div>>
+ </table>
   </div>
 </div>
+<div class="col">
+    <h3>Total: ${{session.get('total', 0)}}</h3>
+    <a type="button"href="{{ url_for ('home_user')}}" class="btn.btn-primary"
+    style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Seguir comprando</a>
+ <button class="btn.btn-success">Finalizar Compra</button>
+</div>
+
+
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/all.min.js"></script>
     <script>

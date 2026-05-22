@@ -118,7 +118,7 @@ def signup():
         regUsuario.close()
         return redirect(url_for('home'))
     else: 
-        return render_template('registro.html')
+        return render_template('signup.html')
 
 @makeupvelaApp.route('/signin', methods=['GET', 'POST'])
 def signin():
@@ -153,7 +153,7 @@ def signout():
 @makeupvelaApp.route('/sUsuario',methods = ['GET','POST'])
 def sUsuario():
     selUsuario = db.connection.cursor()
-    selUsuario.execute("SELECT * FROM usuarios")
+    selUsuario.execute("SELECT * FROM usuario")
     u = selUsuario.fetchall()
     selUsuario.close()
     return render_template('users.html', usuarios=u)

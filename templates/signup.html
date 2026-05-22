@@ -1,29 +1,257 @@
  {% extends 'layout.html' %}
- {% block titulo%} Registro {% endblock %}
+ {% block titulo%} administrador {% endblock %}
  {% block contenido%}
-<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 0;">
-    <div class="card shadow-lg" style="width:100%;max-width:400px;border-radius:18px;overflow:hidden;">
-        <div class="card-body p-5">
-            <h2 class="text-center mb-4" style="font-weight:700;color:#667eea;">Crear Cuenta</h2>
-            <form method="POST" action="signup.html">
-                <div class="mb-3">
-                    <label for="email" class="form-label"><i class="fa-solid fa-envelope form-icon"></i> Correo Electrónico</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="tu@email.com" required>
+    <!-- NAVBAR -->
+    <nav class="navbar-custom">
+        <div class="navbar-content">
+            <a href="/" class="navbar-logo">
+                <i class="fa-solid fa-sparkles"></i>
+                MakeUp Vela
+            </a>
+            <div class="navbar-actions">
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fa-solid fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
                 </div>
-                <div class="mb-3">
-                    <label for="contrasena" class="form-label"><i class="fa-solid fa-lock form-icon"></i> Contraseña</label>
-                    <input type="password" class="form-control" id="contrasena" name="contrasena" placeholder="Tu contraseña" required>
+                <div class="auth-buttons">
+                    <a href="/signup" class="btn-nav">
+                        <i class="fa-solid fa-sign-in-alt"></i> Inicia Sesión
+                    </a>
+                    <a href="/signin" class="btn-nav">
+                        <i class="fa-solid fa-user-plus"></i> Regístrate
+                    </a>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="recordar" name="recordar">
-                        <label class="form-check-label" for="recordar">Recuérdame</label>
-                    </div>
-                    <a href="#" style="font-size:13px;"><i class="fa-solid fa-key form-icon" style="margin-right:4px;"></i>¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </nav>
+      <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container-registro {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            max-width: 450px;
+            width: 100%;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .registro-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .registro-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .registro-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .registro-form {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn-registro {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .btn-registro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-registro:active {
+            transform: translateY(0);
+        }
+
+        .registro-footer {
+            text-align: center;
+            padding: 20px 30px;
+            background: #f8f8f8;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .registro-footer p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+        }
+
+        .registro-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .registro-footer a:hover {
+            color: #764ba2;
+        }
+
+        .form-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .registro-header {
+                padding: 30px 20px;
+            }
+
+            .registro-header h1 {
+                font-size: 22px;
+            }
+
+            .registro-form {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <div class="container-registro">
+        <div class="registro-header">
+            <h1><i class="fa-solid fa-sparkles form-icon"></i>MakeUp Vela</h1>
+            <p>Únete a nuestra comunidad de belleza</p>
+        </div>
+
+        <form class="registro-form" method="POST" action="/signup">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre"><i class="fa-solid fa-user form-icon"></i>Nombre</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
                 </div>
-                <button type="submit" class="btn w-100" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;font-weight:600;letter-spacing:1px;">Registrarse</button>
-            </form>
+                <div class="form-group">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" name="apellido" placeholder="Tu apellido" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="correo"><i class="fa-solid fa-envelope form-icon"></i>Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" placeholder="tu@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono"><i class="fa-solid fa-phone form-icon"></i>Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" placeholder="+1 (555) 123-4567" required>
+            </div>
+
+            <div class="form-group">
+                <label for="clave"><i class="fa-solid fa-lock form-icon"></i>Contraseña</label>
+                <input type="password" id="clave" name="clave" placeholder="Mínimo 8 caracteres" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmar"><i class="fa-solid fa-lock-open form-icon"></i>Confirmar Contraseña</label>
+                <input type="password" id="confirmar" name="confirmar" placeholder="Repite tu contraseña" required>
+            </div>
+
+            <button type="submit" class="btn-registro">Registrarse</button>
+        </form>
+
+        <div class="registro-footer">
+            <p>¿Ya tienes cuenta? <a href="/signin">Inicia sesión aquí</a></p>
         </div>
     </div>
-</div>
 {% endblock %}

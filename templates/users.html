@@ -2,6 +2,35 @@
 {% extends 'layout.html' %}
 {% block titulo%} administrador {% endblock %}
 {% block contenido%}
+ <!-- NAVBAR -->
+    <nav class="navbar-custom">
+        <div class="navbar-content">
+            <a href="{{ url_for('home_admin') }}" class="navbar-logo">
+                <i class="fa-solid fa-sparkles"></i>
+                MakeUp Vela
+            </a>
+            <div class="navbar-actions">
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fa-solid fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+             <div class="cart-icon">
+                   <a href="{{ url_for('sUsuario') }}" class="btn-nav">Usuario</a>
+                </div> 
+                 <div class="cart-icon">
+                   <a href="{{ url_for('sProducto') }}" class="btn-nav">Producto</a>
+                </div>       
+                <div class="auth-buttons">
+                    <a  class="btn-nav">
+                        <i class="fa-solid fa-sign-in-alt"></i> {{current_user.nombre}}
+                    </a>
+                    <a href="/signout" class="btn-nav">
+                        <i class="fa-solid fa-user-plus"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
 <div class="container">
    {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -40,7 +69,7 @@
         <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Cuenta</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="{{ url_for('iUsuarios') }}" method="post">
+      <form action="{{ url_for('iUsuario') }}" method="post">
       <div class="modal-body">
         <imput type="text" name="nombre" placeholder="Nombre" class="Nombre de usuario" required>
         <imput type="email" name="correo" placeholder="Correo" class="Correo electronico" required>

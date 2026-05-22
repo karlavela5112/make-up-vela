@@ -10,9 +10,9 @@ class User (UserMixin):
         self.clave=clave    
         self.perfil=perfil
 
-@classmethod
-def validarClave(self,claveCifrada,clave):
-    return check_password_hash(claveCifrada,clave)
+    @classmethod
+    def validarClave(self,claveCifrada,clave):
+        return check_password_hash(claveCifrada,clave)
     
     
     

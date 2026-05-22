@@ -13,6 +13,12 @@
                     <i class="fa-solid fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
+             <div class="cart-icon">
+                   <a href="{{ url_for('sUsuario') }}" class="btn-nav">Usuario</a>
+                </div> 
+                 <div class="cart-icon">
+                   <a href="{{ url_for('sProducto') }}" class="btn-nav">Producto</a>
+                </div>       
                 <div class="auth-buttons">
                     <a  class="btn-nav">
                         <i class="fa-solid fa-sign-in-alt"></i> {{current_user.nombre}}

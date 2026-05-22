@@ -2,12 +2,7 @@
  {% extends 'layout.html' %}
  {% block titulo%} administrador {% endblock %}
  {% block contenido%}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MakeUp Vela - Tienda de Maquillaje</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/all.min.css">
+
     <style>
         * {
             margin: 0;
@@ -481,12 +476,11 @@
             }
         }
     </style>
-</head>
-<body>
-    <!-- NAVBAR -->
+
+   <!-- NAVBAR -->
     <nav class="navbar-custom">
         <div class="navbar-content">
-            <a href="{{ url_for('home') }}" class="navbar-logo">
+            <a href="{{ url_for('home_admin') }}" class="navbar-logo">
                 <i class="fa-solid fa-sparkles"></i>
                 MakeUp Vela
             </a>
@@ -495,12 +489,18 @@
                     <i class="fa-solid fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </div>
+             <div class="cart-icon">
+                   <a href="{{ url_for('sUsuario') }}" class="btn-nav">Usuario</a>
+                </div> 
+                 <div class="cart-icon">
+                   <a href="{{ url_for('sProducto') }}" class="btn-nav">Producto</a>
+                </div>       
                 <div class="auth-buttons">
-                    <a href="/login" class="btn-nav">
-                        <i class="fa-solid fa-sign-in-alt"></i> Inicia Sesión
+                    <a  class="btn-nav">
+                        <i class="fa-solid fa-sign-in-alt"></i> {{current_user.nombre}}
                     </a>
-                    <a href="/signup" class="btn-nav">
-                        <i class="fa-solid fa-user-plus"></i> Regístrate
+                    <a href="/signout" class="btn-nav">
+                        <i class="fa-solid fa-user-plus"></i> Cerrar Sesión
                     </a>
                 </div>
             </div>
@@ -761,12 +761,34 @@
         renderProducts();
         updateCartCount();
     </script>
-</body>
 <div class="container">
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+            {% for m in messages %}
+                <div class="alert alert-danger" role="alert">
+            {{ m }}
+            </div>
+            {% endfor %}
+    {% endif %}
+{% endwith %}
+    {% for p in productos %}
+  <div class="product-card">
+                    <div class="product-image">
+                        <img src="/static/img/{{p[6]}}" alt="" style="width:100%;height:100%;object-fit:cover;" />
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">{{p[1]}}</div>
+                        <div class="product-description">{{p[5]}}</div>
+                        <div class="product-price">{{p[3]}}</div>
+                        <button class="btn-add-cart">
+                            <i class="fa-solid fa-cart-plus"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                </div>
   <!-- Modal insert-->
 <div class="modal fade" id="updateModal{{ p[0] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">  
 <div class="row row-cols-1 row-cols-md-2 g-4">
-    {%for p in %}
+    {% for p in productos %}
   <div class="col">
     <div class="card">
       <img src="static/img/{{ p[6]}}" class="card-img-top" alt="...">
@@ -789,6 +811,7 @@
   </div>
 {%endfor%}
 </div>
+</div>
 <!-- Modal Update-->
 <div class="modal fade" id="updateModal{{ p[0] }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -810,6 +833,7 @@
     </div>
   </div>
 </div>
-</html>
-    {% endblock %}
+{% endfor %}
+</div>
+{% endblock %}
 

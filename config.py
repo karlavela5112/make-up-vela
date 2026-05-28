@@ -1,12 +1,23 @@
+import os
+
+
 class Config:
     SECRET_KEY  ='OJITOFHUFflgnnfgnjfdotriodj255555'
     DEBUG   =True
 
 class DevelopmentConfig(Config):
+    """
     MYSQL_HOST      ='localhost'
     MYSQL_USER      ='root'
     MYSQL_PASSWORD  ='mysql'
     MYSQL_DB        ='makeupvela' 
+    """
+    MYSQL_HOST = os.environ.get('MYSQLHOST')
+    MYSQL_USER = os.environ.get('MYSQLUSER')
+    MYSQL_PASSWORD = os.environ.get('MYSQLPASSWORD')
+    MYSQL_DB = os.environ.get('MYSQLDATABASE')
+    MYSQL_PORT = int(os.environ.get('MYSQLPORT', 3306))
+
 class MailConfig(Config):
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587

@@ -1,1 +1,1 @@
-web: gunicorn makeupvela:makeupvelApp
+web: gunicorn makeupvela:makeupvelaApp

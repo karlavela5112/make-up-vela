@@ -115,9 +115,9 @@ def signup():
         correo = request.form['correo'] 
         clave = request.form['clave']
         claveCifrada = generate_password_hash(clave)
-        msg = Message(subject='Bienvenido a Makeup Vela', recipients=[correo])
-        msg.html = render_template('mail.html', usuario=nombre)
-        mail.send(msg)
+        #msg = Message(subject='Bienvenido a Makeup Vela', recipients=[correo])
+        #msg.html = render_template('mail.html', usuario=nombre)
+        #mail.send(msg)
         regUsuario = db.connection.cursor()
         regUsuario.execute("INSERT INTO usuario (nombre, correo, clave) VALUES (%s, %s, %s)", (nombre.upper(), correo, claveCifrada))
         flash('Usuario registrado') 

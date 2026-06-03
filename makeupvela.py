@@ -14,27 +14,27 @@ from flask_mail import Mail, Message
 import os
 
 
-makeupvelaApp=Flask (__name__)
-makeupvelaApp.secret_key = 'clave_secreta_cambia_esto'
+makeupvelApp=Flask (__name__)
+makeupvelApp.secret_key = 'clave_secreta_cambia_esto'
 
-makeupvelaApp.config.from_object(config['development'])
-makeupvelaApp.config.from_object(config['mail'])
-print("HOST:", makeupvelaApp.config['MYSQL_HOST'])
-print("USER:", makeupvelaApp.config['MYSQL_USER'])
-print("DB:", makeupvelaApp.config['MYSQL_DB'])
-print("PORT:", makeupvelaApp.config['MYSQL_PORT'])
+makeupvelApp.config.from_object(config['development'])
+makeupvelApp.config.from_object(config['mail'])
+print("HOST:", makeupvelApp.config['MYSQL_HOST'])
+print("USER:", makeupvelApp.config['MYSQL_USER'])
+print("DB:", makeupvelApp.config['MYSQL_DB'])
+print("PORT:", makeupvelApp.config['MYSQL_PORT'])
 
 
 
-db              =MySQL(makeupvelaApp)
-adminUsuario = LoginManager(makeupvelaApp)
-mail = Mail(makeupvelaApp)
+db              =MySQL(makeupvelApp)
+adminUsuario = LoginManager(makeupvelApp)
+mail = Mail(makeupvelApp)
 
 @adminUsuario.user_loader
 def cargarUsuario(id):
     return ModelUser.get_by_id(db, id)
 
-@makeupvelaApp.route('/', methods=['GET'])
+@makeupvelApp.route('/', methods=['GET'])
 def home():
     # Obtener productos de la base de datos
     selProducto = db.connection.cursor()
@@ -47,7 +47,7 @@ def home():
     return render_template('home.html', productos=productos, carrito=carrito, total_carrito=total_carrito)
 
 # Ruta para agregar producto al carrito
-@makeupvelaApp.route('/agregar_al_carrito', methods=['POST'])
+@makeupvelApp.route('/agregar_al_carrito', methods=['POST'])
 def agregar_al_carrito():
     producto_id = int(request.form['producto_id'])
     cantidad = int(request.form.get('cantidad', 1))
@@ -79,7 +79,7 @@ def agregar_al_carrito():
     return redirect(url_for('home'))
 
 # Ruta para actualizar cantidad en el carrito
-@makeupvelaApp.route('/actualizar_carrito', methods=['POST'])
+@makeupvelApp.route('/actualizar_carrito', methods=['POST'])
 def actualizar_carrito():
     producto_id = int(request.form['producto_id'])
     cantidad = int(request.form.get('cantidad', 1))
@@ -93,7 +93,7 @@ def actualizar_carrito():
     return redirect(url_for('home'))
 
 # Ruta para eliminar producto del carrito
-@makeupvelaApp.route('/eliminar_del_carrito', methods=['POST'])
+@makeupvelApp.route('/eliminar_del_carrito', methods=['POST'])
 def eliminar_del_carrito():
     producto_id = int(request.form['producto_id'])
     carrito = session.get('carrito', [])
@@ -103,12 +103,12 @@ def eliminar_del_carrito():
     return redirect(url_for('home'))
 
 # Ruta para checkout
-@makeupvelaApp.route('/checkout', methods=['POST'])
+@makeupvelApp.route('/checkout', methods=['POST'])
 def checkout():
     session.pop('carrito', None)
     flash('¡Gracias por tu compra!')
     return redirect(url_for('home'))
-@makeupvelaApp.route('/signup', methods=['GET', 'POST'])
+@makeupvelApp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -127,7 +127,7 @@ def signup():
     else: 
         return render_template('signup.html')
 
-@makeupvelaApp.route('/signin', methods=['GET', 'POST'])
+@makeupvelApp.route('/signin', methods=['GET', 'POST'])
 def signin():
     if request.method == 'POST':
         usuario = User(0,None,request.form['correo'],request.form['clave'],None)
@@ -152,12 +152,12 @@ def signin():
             return render_template('signin.html')
     else:
         return render_template('signin.html')  
-@makeupvelaApp.route('/signout')
+@makeupvelApp.route('/signout')
 def signout():
     logout_user()
     return render_template('home.html')
 
-@makeupvelaApp.route('/sUsuario',methods = ['GET','POST'])
+@makeupvelApp.route('/sUsuario',methods = ['GET','POST'])
 def sUsuario():
     selUsuario = db.connection.cursor()
     selUsuario.execute("SELECT * FROM usuario")
@@ -165,7 +165,7 @@ def sUsuario():
     selUsuario.close()
     return render_template('users.html', usuarios=u)
 
-@makeupvelaApp.route('/iUsuario', methods=["GET", "POST"])
+@makeupvelApp.route('/iUsuario', methods=["GET", "POST"])
 def iUsuario():
         if request.method == 'POST':
             nombre = request.form['nombre']
@@ -181,7 +181,7 @@ def iUsuario():
             return redirect(url_for('sUsuario'))
         else:
             return render_template('users.html')
-@makeupvelaApp.route('/uUsuario/<int:id>', methods=['GET', 'POST'])
+@makeupvelApp.route('/uUsuario/<int:id>', methods=['GET', 'POST'])
 def uUsuario(id):
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -195,7 +195,7 @@ def uUsuario(id):
         return redirect(url_for('sUsuario'))
     else:
        return redirect(url_for('sUsuario'))
-@makeupvelaApp.route('/dUsuario/<int:id>', methods=['GET', 'POST'])
+@makeupvelApp.route('/dUsuario/<int:id>', methods=['GET', 'POST'])
 def dUsuario(id):
     if request.method == 'POST':
         delUsuario = db.connection.cursor()
@@ -207,7 +207,7 @@ def dUsuario(id):
     else:
         return render_template('users.html')
 
-@makeupvelaApp.route('/sProducto',methods = ['GET','POST']) 
+@makeupvelApp.route('/sProducto',methods = ['GET','POST']) 
 def sProducto():
     selProducto = db.connection.cursor()
     selProducto.execute("SELECT * FROM productos")
@@ -215,7 +215,7 @@ def sProducto():
     selProducto.close()
     return render_template('productos.html', productos=p)
 
-@makeupvelaApp.route('/uProductos/<int:id>' ,methods=['GET','POST'])
+@makeupvelApp.route('/uProductos/<int:id>' ,methods=['GET','POST'])
 def uProductos(id):
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -242,7 +242,7 @@ def uProductos(id):
         flash("Error al actualizar el producto")
         return redirect(url_for('productos'))
     
-@makeupvelaApp.route('/home_user', methods=['GET','POST'])
+@makeupvelApp.route('/home_user', methods=['GET','POST'])
 def home_user():
       selProducto = db.connection.cursor()
       selProducto.execute("SELECT * FROM productos")
@@ -250,11 +250,11 @@ def home_user():
       selProducto.close()
       return render_template('usuario.html', productos=p)
 
-@makeupvelaApp.route('/home_admin', methods=['GET','POST'])
+@makeupvelApp.route('/home_admin', methods=['GET','POST'])
 def home_admin():
     return render_template('admin.html')
 
-@makeupvelaApp.route('/sCarrito', methods=['GET', 'POST'])
+@makeupvelApp.route('/sCarrito', methods=['GET', 'POST'])
 @login_required
 def sCarrito():
     selCarrito = db.connection.cursor()
@@ -265,7 +265,7 @@ def sCarrito():
     session['total_carrito'] = sum(c[4]for c in detalles_carrito)
     return render_template('carrito.html', carrito=detalles_carrito)
 
-@makeupvelaApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
+@makeupvelApp.route('/iCarrito/<int:id>', methods=['GET', 'POST'])
 def iCarrito():
         cantidad = request.form['cantidad']
         precio = request.form['precio']
@@ -290,7 +290,7 @@ def iCarrito():
             flash('producto agregado al carrito')
             return redirect(url_for('sCarrito'))
             
-@makeupvelaApp.route('/iProducto', methods=['GET', 'POST'])
+@makeupvelApp.route('/iProducto', methods=['GET', 'POST'])
 def iProducto():
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -314,6 +314,6 @@ def iProducto():
         return render_template('productos.html')
 
 if __name__ == '__main__':
-    makeupvelaApp.run(port=5025)
+    makeupvelApp.run(port=5025)
 
 

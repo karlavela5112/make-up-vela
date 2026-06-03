@@ -12,11 +12,11 @@ class DevelopmentConfig(Config):
     MYSQL_PASSWORD  ='mysql'
     MYSQL_DB        ='makeupvela' 
     """
-    MYSQL_HOST = os.environ.get('MYSQLHOST')
-    MYSQL_USER = os.environ.get('MYSQLUSER')
-    MYSQL_PASSWORD = os.environ.get('MYSQLPASSWORD')
-    MYSQL_DB = os.environ.get('MYSQLDATABASE')
-    MYSQL_PORT = int(os.environ.get('MYSQLPORT', 3306))
+    MYSQL_HOST = os.environ.get('MYSQL_HOST')
+    MYSQL_USER = os.environ.get('MYSQL_USER')
+    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+    MYSQL_DB = os.environ.get('MYSQL_DB')
+    MYSQL_PORT = int(os.environ.get('MYSQL_PORT', 3306))
 
 class MailConfig(Config):
     MAIL_SERVER = 'smtp.gmail.com'

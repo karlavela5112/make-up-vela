@@ -6,7 +6,7 @@ class Config:
     DEBUG   =True
 
 class DevelopmentConfig(Config):
-    """
+    
     MYSQL_HOST      ='localhost'
     MYSQL_USER      ='root'
     MYSQL_PASSWORD  ='mysql'
@@ -17,7 +17,7 @@ class DevelopmentConfig(Config):
     MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
     MYSQL_DB = os.environ.get('MYSQL_DB')
     MYSQL_PORT = int(os.environ.get('MYSQL_PORT', 3306))
-
+    """
 class MailConfig(Config):
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 587

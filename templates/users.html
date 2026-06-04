@@ -1,8 +1,7 @@
-
 {% extends 'layout.html' %}
-{% block titulo%} administrador {% endblock %}
-{% block contenido%}
- <!-- NAVBAR -->
+{% block titulo %} Administrador {% endblock %}
+{% block contenido %}
+
     <nav class="navbar-custom">
         <div class="navbar-content">
             <a href="{{ url_for('home_admin') }}" class="navbar-logo">
@@ -10,172 +9,151 @@
                 MakeUp Vela
             </a>
             <div class="navbar-actions">
-                <div class="cart-icon" onclick="toggleCart()">
-                    <i class="fa-solid fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
+                <div class="cart-icon">
+                    <a href="{{ url_for('home') }}" class="btn-nav" style="background-color: #0d6efd; color: white;">
+                        <i class="fa-solid fa-store"></i> Ver Tienda
+                    </a>
                 </div>
-             <div class="cart-icon">
-                   <a href="{{ url_for('sUsuario') }}" class="btn-nav">Usuario</a>
+                <div class="cart-icon">
+                    <a href="{{ url_for('sUsuario') }}" class="btn-nav">Usuario</a>
                 </div> 
-                 <div class="cart-icon">
-                   <a href="{{ url_for('sProducto') }}" class="btn-nav">Producto</a>
+                <div class="cart-icon">
+                    <a href="{{ url_for('sProducto') }}" class="btn-nav">Producto</a>
                 </div>       
                 <div class="auth-buttons">
-                    <a  class="btn-nav">
-                        <i class="fa-solid fa-sign-in-alt"></i> {{current_user.nombre}}
+                    <a class="btn-nav">
+                        <i class="fa-solid fa-user"></i> {{ current_user.nombre }}
                     </a>
-                    <a href="/signout" class="btn-nav">
-                        <i class="fa-solid fa-user-plus"></i> Cerrar Sesión
+                    <a href="/signout" class="btn-nav" style="background-color: #dc3545; color: white;">
+                        <i class="fa-solid fa-sign-out-alt"></i> Cerrar Sesión
                     </a>
                 </div>
             </div>
         </div>
     </nav>
-<div class="container">
-   {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                         {% for m in messages %}
-                             <div class="alert alert-danger" role="alert">
-                            {{ m }}
-                            </div>
-                         {% endfor %}
-                    {% endif %}
-                {% endwith %}
+
+    <div class="container my-5">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for m in messages %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ m }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
                 
-    <table class="table table-striped-columns">
-  <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">nombre</th>
-      <th scope="col">correo</th>
-      <th scope="col">clave</th>
-      <th scope="col">Perfil</th>
-      <th scope="col" colspan="2"> 
-         <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">
-<i class="fa-solid fa-user-plus"></i>
-</button>
-      </th>
-    </tr>
-  </thead>
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Clave (Hash)</th>
+                    <th scope="col">Perfil</th>
+                    <th scope="col" colspan="2"> 
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#insertModal">
+                            <i class="fa-solid fa-user-plus"></i> Crear Usuario
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <th scope="row">{{ u[0] }}</th>
+                    <td>{{ u[1] }}</td>
+                    <td>{{ u[2] }}</td>
+                    <td>{{ u[3][:15] }}...</td>
+                    <td>{{ 'Administrador' if u[4] == 'A' else 'Usuario' }}</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal{{ u[0] }}">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ u[0] }}">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
 
+                <div class="modal fade" id="updateModal{{ u[0] }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5">Actualizar Cuenta</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/uUsuario/{{ u[0] }}" method="post">
+                                <div class="modal-body">
+                                    <input value="{{ u[1] }}" type="text" name="nombre" placeholder="Nombre" class="form-control mb-3" required>
+                                    <input value="{{ u[2] }}" type="email" name="correo" placeholder="Correo" class="form-control mb-3" required>
+                                    <input type="password" name="clave" placeholder="Nueva Clave (Obligatorio)" class="form-control mb-3" required>
+                                    <select name="perfil" class="form-select" required>
+                                        <option value="U" {% if u[4] == 'U' %}selected{% endif %}>Usuario</option>
+                                        <option value="A" {% if u[4] == 'A' %}selected{% endif %}>Administrador</option>
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-<!-- Modal -->
-<div class="modal fade" id="inserteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Cuenta</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="{{ url_for('iUsuario') }}" method="post">
-      <div class="modal-body">
-        <imput type="text" name="nombre" placeholder="Nombre" class="Nombre de usuario" required>
-        <imput type="email" name="correo" placeholder="Correo" class="Correo electronico" required>
-        <imput type="password" name="clave" placeholder="Clave" class="Contraseña" required>
-          <select name="perfil" class="form-select" aria-label="Default select example" required>
-            <select name="perfil" class="form-select" aria-label="Default select example">
-            <option selected>perfil</option>
-            <option value="U">usuario</option>
-            <option value="A">administrador</option>
-</select>
-          
-          
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">crear cuenta </button>
-      </div>
-      </form>
+                <div class="modal fade" id="deleteModal{{ u[0] }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5">Eliminar Usuario</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="/dUsuario/{{ u[0] }}" method="post">
+                                <div class="modal-body text-center">
+                                    <i class="fa-solid fa-triangle-exclamation fa-3x text-danger mb-3"></i>
+                                    <p>¿Estás seguro de que deseas eliminar al usuario <strong>{{ u[1] }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="insertModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Crear Nueva Cuenta</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ url_for('iUsuario') }}" method="post">
+                        <div class="modal-body">
+                            <input type="text" name="nombre" placeholder="Nombre" class="form-control mb-3" required>
+                            <input type="email" name="correo" placeholder="Correo" class="form-control mb-3" required>
+                            <input type="password" name="clave" placeholder="Clave" class="form-control mb-3" required>
+                            <select name="perfil" class="form-select" required>
+                                <option value="" disabled selected>Selecciona un perfil...</option>
+                                <option value="U">Usuario</option>
+                                <option value="A">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-success">Crear Cuenta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-  <tbody>
-    {% for u in usuarios %}
-    <tr>
-      <th scope="row">{{u[0]}}</th>
-      <td>{{u[1]}}</td>
-      <td>{{u[2]}}</td>
-      <td>{{u[3][:30]}}</td>
-      <td>{{u[4]}}</td>
-      <td>
-        <!-- Button update -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal{{u[0]}}">
-<i class="fa-solid fa-user-pen" style="color: rgb(8, 93, 245);"></i>
-</button>
-      </td>
-      <td>
-        <!-- Button Delete -->
-<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  <i class="fa-solid fa-trash" style="color: rgb(177, 151, 252);"></i>
-</button>
-      </td>
-    </tr>
-    <!-- update Modal -->
-<div class="modal fade" id="deleteModal{{u[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Actualizar Cuenta</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="/uUsuario/{{ u[0] }}" method="post">
-      <div class="modal-body">
-        <imput value="{{ u[1] }}" type="text" name="nombre" placeholder="Nombre" class="Nombre de usuario" required>
-        <imput value="{{ u[2] }}" type="email" name="correo" placeholder="Correo" class="Correo electronico" required>
-        <imput type="password" name="clave" placeholder="Clave" class="Contraseña" required>
-          <select name="perfil" class="form-select" aria-label="Default select example" required>
-           
-            <option selected value="{{u[4]}}">
-            {% if u[4] == 'A' %}
-            Administrador
-            {% else %}usuario{% endif %}
-            </option>
-            <option selected>perfil</option>
-            <option value="U">usuario</option>
-            <option value="A">administrador</option>
-</select>
-          
-          
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">crear cuenta </button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Usuario</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="/dUsuario/{{ u[0] }}" method="post">
-      <div class="modal-body">
-        <p><i class="fa-solid fa-triangle-exclamation" style="color: rgb(255, 0, 0);"></i>
-        ¿Estás seguro de que deseas eliminar este usuario{{ u[1] }}?
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="submit" class="btn btn-danger">Eliminar Usuario</button>
-      </div>
-      </form>
-    </div>
-  </div>
-</div>
-    {% endfor %}
-    
-  </tbody>
-</table>
-</div>
 {% endblock %}
-</html>
-

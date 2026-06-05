@@ -1,8 +1,8 @@
 from tempfile import template
 from tkinter import INSERT
 from flask import Flask, render_template,redirect, url_for, request,flash, session
-import pymysql
-pymysql.install_as_MySQLdb()
+
+
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -19,11 +19,12 @@ makeupvelApp.secret_key = 'clave_secreta_cambia_esto'
 
 makeupvelApp.config.from_object(config['development'])
 makeupvelApp.config.from_object(config['mail'])
+"""
 print("HOST:", makeupvelApp.config['MYSQL_HOST'])
 print("USER:", makeupvelApp.config['MYSQL_USER'])
 print("DB:", makeupvelApp.config['MYSQL_DB'])
 print("PORT:", makeupvelApp.config['MYSQL_PORT'])
-
+"""
 
 
 db              =MySQL(makeupvelApp)

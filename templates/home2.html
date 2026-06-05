@@ -1,0 +1,24 @@
+{% extends 'layout.html' %} {% block titulo%} Inicio - MakeUp Vela {% endblock %} {% block contenido%}
+MakeUp Vela
+{{ cart_count }}
+{% if current_user.is_authenticated %} {% if current_user.perfil == 'A' %} Panel Admin {% endif %} Cerrar Sesión {% else %} Regístrate Iniciar Sesión {% endif %}
+Bienvenido a MakeUp Vela
+Descubre nuestra colección de maquillaje premium
+
+Nuestros Productos
+Maquillaje de calidad para resaltar tu belleza natural
+
+{{ busqueda_actual }}
+
+Todas las categorías
+Buscar
+{% for producto in productos %}
+{{ producto[1] }}
+{{ producto[1] }}
+{{ producto[2] }}
+${{ "%.2f"|format(producto[3]) }}
+Agregar al Carrito
+{% else %}
+No se encontraron productos con esos filtros.
+{% endfor %}
+{% endblock %}

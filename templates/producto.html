@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block titulo %} {{ producto[1] }} - MakeUp Vela {% endblock %}
+{% block contenido %}
+    <nav class="navbar-custom">
+        <div class="navbar-content">
+            <a href="{{ url_for('home') }}" class="navbar-logo">
+                <i class="fa-solid fa-sparkles"></i> MakeUp Vela
+            </a>
+            <div class="navbar-actions">
+                <a href="{{ url_for('ver_carrito') }}" class="cart-icon text-decoration-none">
+                    <i class="fa-solid fa-shopping-cart"></i>
+                    <span class="cart-count">{{ cart_count }}</span>
+                </a>
+                <a href="{{ url_for('home') }}" class="btn-nav">
+                    <i class="fa-solid fa-arrow-left"></i> Volver a la Tienda
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row align-items-center bg-white p-5 rounded-4 shadow-sm">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+                <img src="/static/img/{{ producto[4] }}" alt="{{ producto[1] }}" class="img-fluid rounded shadow-sm img-product-large" onerror="this.src='/static/img/images.jpg'">
+            </div>
+            
+            <div class="col-md-6 px-md-5">
+                <span class="badge bg-gradient-primary mb-2 px-3 py-2 text-uppercase letter-spacing-1">{{ producto[5] }}</span> 
+                
+                <h1 class="display-5 fw-bold text-dark-gray mb-3">{{ producto[1] }}</h1>
+                
+                <h2 class="text-blue-light fw-bold mb-4 display-6">${{ "%.2f"|format(producto[3]) }} <span class="fs-6 text-muted fw-normal">MXN</span></h2>
+                
+                <hr class="mb-4">
+
+                <div class="producto-descripcion mb-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-circle-info text-blue-light me-2"></i>Detalles del Producto</h5>
+                    <p class="lead text-gray lh-lg" style="font-size: 1.1rem;">
+                        {{ producto[2] }}
+                    </p>
+                </div>
+                
+                <div class="d-flex gap-4 mb-4 text-center">
+                    <div>
+                        <i class="fa-solid fa-truck-fast text-blue-light fs-4 mb-2"></i>
+                        <p class="small text-muted mb-0">Envío Rápido</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-shield-halved text-blue-light fs-4 mb-2"></i>
+                        <p class="small text-muted mb-0">Compra Segura</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-leaf text-success fs-4 mb-2"></i>
+                        <p class="small text-muted mb-0">Cruelty Free</p>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <form action="{{ url_for('agregar_al_carrito') }}" method="POST" class="m-0 w-100">
+                        <input type="hidden" name="producto_id" value="{{ producto[0] }}">
+                        <button type="submit" class="btn btn-primary btn-lg w-100 py-3 shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="fa-solid fa-cart-plus me-2"></i> AGREGAR A LA CANASTA
+                        </button>
+                    </form>
+                </div>
+                
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="mt-4">
+                            {% for m in messages %}
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <i class="fa-solid fa-check-circle me-2"></i>{{ m }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

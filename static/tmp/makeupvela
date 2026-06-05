@@ -3,6 +3,7 @@ from tkinter import INSERT
 from flask import Flask, render_template,redirect, url_for, request,flash, session
 
 
+from flask.cli import load_dotenv
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -13,7 +14,7 @@ from flask_login import LoginManager, current_user, login_required, login_user, 
 from flask_mail import Mail, Message
 import os
 
-
+load_dotenv()
 makeupvelApp=Flask (__name__)
 makeupvelApp.secret_key = 'clave_secreta_cambia_esto'
 

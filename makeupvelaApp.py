@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
@@ -7,7 +8,7 @@ from models.entities.User import User
 from models.ModelUser import ModelUser
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from flask_mail import Mail, Message
-from dotenv import load_dotenv
+
 import os
 
 load_dotenv()
